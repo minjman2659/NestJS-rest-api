@@ -1,7 +1,17 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { configuration, validationSchema } from './config';
+import { UsersModule } from './modules/users/users.module';
+import { LoggerModule } from './providers/logger';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './common/filters';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -32,6 +42,15 @@ const typeOrmModuleOptions = {
       validationSchema,
     }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
+    UsersModule,
+    LoggerModule,
   ],
+  providers: [{ provide: APP_FILTER, useClass: HttpExceptionFilter }],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(LoggerMiddleware)
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
+  }
+}

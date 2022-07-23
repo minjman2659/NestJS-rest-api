@@ -1,3 +1,4 @@
+import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -5,20 +6,19 @@ import {
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
+import { LoggerService } from './providers/logger';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestFastifyApplication>(
     AppModule,
-    new FastifyAdapter({ logger: true }),
+    new FastifyAdapter({ logger: false }),
   );
-  console.log(__dirname);
+  app.useGlobalFilters(new HttpExceptionFilter(new LoggerService()));
   const configService = app.get(ConfigService);
-  const port = configService.get('PORT');
-  const env = configService.get('NODE_ENV');
 
-  await app.listen(port, (err, address) => {
+  await app.listen(configService.get('PORT'), (err, address) => {
     console.log(`Server is Running: ${address}`);
-    console.log(`Server ENV: ${env}`);
+    console.log(`Server ENV: ${configService.get('NODE_ENV')}`);
   });
 }
 bootstrap();

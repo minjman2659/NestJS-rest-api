@@ -11,7 +11,7 @@ async function bootstrap() {
     AppModule,
     new FastifyAdapter({ logger: true }),
   );
-
+  console.log(__dirname);
   const configService = app.get(ConfigService);
   const port = configService.get('PORT');
   const env = configService.get('NODE_ENV');

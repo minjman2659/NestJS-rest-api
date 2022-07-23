@@ -12,6 +12,7 @@ import { LoggerModule } from './providers/logger';
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './common/filters';
+import { PostsModule } from './modules/posts/posts.module';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -27,7 +28,7 @@ const typeOrmModuleOptions = {
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
     synchronize: configService.get('NODE_ENV') === 'production' ? false : true,
-    logging: configService.get('NODE_ENV') === 'production' ? false : true,
+    // logging: configService.get('NODE_ENV') === 'production' ? false : true,
   }),
   inject: [ConfigService],
 };
@@ -44,6 +45,7 @@ const typeOrmModuleOptions = {
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     UsersModule,
     LoggerModule,
+    PostsModule,
   ],
   providers: [{ provide: APP_FILTER, useClass: HttpExceptionFilter }],
 })

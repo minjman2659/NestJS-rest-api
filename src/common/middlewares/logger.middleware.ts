@@ -1,7 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { LoggerService } from 'src/providers/logger';
 
-// req.user 관련 진행할 미들웨어
 @Injectable()
 export class LoggerMiddleware implements NestMiddleware {
   use(req: any, res: any, next: () => void) {
@@ -13,8 +12,11 @@ export class LoggerMiddleware implements NestMiddleware {
       query: req.query,
       body: req.body,
     };
+    // response가 완료된 이후에 로그를 남기고자 하는 경우
+    res.on('finish', () => {
+      loggerService.log(JSON.stringify(log));
+    });
 
-    loggerService.log(JSON.stringify(log));
     next();
   }
 }

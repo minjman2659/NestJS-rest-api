@@ -47,9 +47,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const prodLog = {
       statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
-      message:
-        ((exception as any)?.getResponse() as any)?.message ||
-        'Internal Server Error',
+      message: 'Internal Server Error',
     };
 
     reply.status(prodLog.statusCode).send(prodLog);

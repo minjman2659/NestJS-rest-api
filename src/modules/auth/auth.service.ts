@@ -2,10 +2,11 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { UserEntity } from '@modules/users/user.entity';
 import { hashPassword, comparePassword } from '@common/helpers';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
@@ -15,6 +16,7 @@ export class AuthService {
   constructor(
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
+    private dataSource: DataSource,
   ) {}
 
   async findByEmail(email: string) {
@@ -34,15 +36,25 @@ export class AuthService {
   }
 
   async create(body: CreateUserBodyDto) {
-    const { password, ...rest } = body;
+    const { password, email, name, isAdmin } = body;
     const hashedPassword = hashPassword(password);
 
-    await this.findByEmail(rest.email);
+    await this.findByEmail(email);
 
-    await this.usersRepository.save({
-      ...rest,
-      password: hashedPassword,
-    });
+    try {
+      await this.dataSource.transaction(async (manager) => {
+        const user = new UserEntity();
+        user.name = name;
+        user.email = email;
+        user.password = hashedPassword;
+        if (isAdmin) {
+          user.isAdmin = isAdmin;
+        }
+        await manager.save(user);
+      });
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 
   async login(body: LoginBodyDto) {

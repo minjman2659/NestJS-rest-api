@@ -2,13 +2,14 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
   Post,
   Query,
   Res,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { CreateUserBodyDto } from './dto';
+import { CreateUserBodyDto, LoginBodyDto } from './dto';
 import { emailValidator } from '@common/helpers';
 import { ValidationPipe } from '@common/pipes';
 import { FastifyReply } from 'fastify';
@@ -40,5 +41,30 @@ export class AuthController {
   ) {
     await this.authService.create(body);
     reply.status(201).send('Created');
+  }
+
+  @Post('login')
+  async login(@Body(new ValidationPipe()) body: LoginBodyDto) {
+    const user = await this.authService.login(body);
+    return user;
+  }
+
+  @Post('logout')
+  logout(@Res() reply: FastifyReply) {
+    reply.setCookie('refreshToken', null, {
+      maxAge: 0,
+      httpOnly: true,
+    });
+    reply.status(200).send({ accessToken: null });
+  }
+
+  @Delete('signout')
+  signout(@Res() reply: FastifyReply) {
+    // this.authService.signout 실행한 뒤,
+    reply.setCookie('refreshToken', null, {
+      maxAge: 0,
+      httpOnly: true,
+    });
+    reply.status(200).send({ accessToken: null });
   }
 }

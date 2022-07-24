@@ -6,9 +6,9 @@ export const validationSchema = Joi.object({
   API_HOST: Joi.string().required(),
   CLIENT_HOST: Joi.string().required(),
   SECRET_KEY: Joi.string().required(),
-  PASSWORD_SALT: Joi.string().required(),
   POSTGRES: Joi.object({
     DATABASE: Joi.string().required(),
+    PORT: Joi.number().required(),
     HOST: Joi.string().required(),
     USER: Joi.string().required(),
     PW: Joi.string().required(),

@@ -5,6 +5,7 @@ import {
   NestFastifyApplication,
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
+import fastifyCookie from '@fastify/cookie';
 import { AppModule } from './app.module';
 import { LoggerService } from '@providers/logger';
 
@@ -26,6 +27,10 @@ async function bootstrap() {
   });
   app.useGlobalFilters(new HttpExceptionFilter(logger));
   app.setGlobalPrefix('/api');
+
+  await app.register(fastifyCookie, {
+    secret: configService.get('SECRET_KEY'),
+  });
 
   await app.listen(configService.get('PORT'), (err, address) => {
     if (err) {

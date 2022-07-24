@@ -1,9 +1,14 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from '@modules/users/user.entity';
-import { hashPassword } from '@common/helpers';
-import { CreateUserBodyDto } from './dto';
+import { hashPassword, comparePassword } from '@common/helpers';
+import { CreateUserBodyDto, LoginBodyDto } from './dto';
 
 @Injectable()
 export class AuthService {
@@ -38,5 +43,45 @@ export class AuthService {
       ...rest,
       password: hashedPassword,
     });
+  }
+
+  async login(body: LoginBodyDto) {
+    const { email, password } = body;
+
+    const user = await this.usersRepository.findOne({
+      where: { email },
+      select: [
+        'id',
+        'email',
+        'name',
+        'password',
+        'createdAt',
+        'updatedAt',
+        'isSeceder',
+      ],
+    });
+
+    if (!user) {
+      throw new NotFoundException('존재하지 않는 유저 입니다.');
+    }
+
+    if (user.isSeceder) {
+      throw new ConflictException('탈퇴한 유저입니다.');
+    }
+
+    if (!comparePassword(password, user.password)) {
+      throw new ForbiddenException('패스워드가 다릅니다.');
+    }
+
+    const { id, email: userEmail, name, createdAt, updatedAt } = user;
+    return { id, email: userEmail, name, createdAt, updatedAt };
+  }
+
+  async signout() {
+    // 로그인 중인 유저의 아이디를 알아내고,
+    // 해당 아이디로 유저 정보를 find 한 뒤,
+    // isSeceder의 값을 true로 업데이트한다.
+    // refreshToken 쿠키 값을 null로 set 하고,
+    // 200 status code와 함께 { accessToken: null } 값을 응답한다.
   }
 }

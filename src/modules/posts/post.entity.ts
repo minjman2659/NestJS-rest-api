@@ -26,7 +26,7 @@ export class PostEntity {
   @Column({ type: 'text', nullable: true }) // 임시저장 상태일 경우 콘텐츠는 없을 수 있음!
   content: string;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: true })
   thumbnail: string;
 
   @IsBoolean()

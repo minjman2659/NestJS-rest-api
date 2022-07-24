@@ -1,5 +1,4 @@
 import { IsBoolean, IsEmail, IsNotEmpty, IsString } from 'class-validator';
-import { Exclude } from 'class-transformer';
 import {
   Entity,
   Column,
@@ -23,8 +22,7 @@ export class UserEntity {
   name: string;
 
   @IsString()
-  @Exclude()
-  @Column({ length: 10, type: 'varchar', nullable: true }) // social 로그인일 경우 비밀번호 없을 수도 있음!
+  @Column({ length: 10, type: 'varchar', nullable: true, select: false }) // social 로그인일 경우 비밀번호 없을 수도 있음!
   password: string;
 
   @IsEmail({}, { message: '올바른 이메일을 작성해주세요.' })

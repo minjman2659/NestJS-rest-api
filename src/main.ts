@@ -25,6 +25,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalFilters(new HttpExceptionFilter(logger));
+  app.setGlobalPrefix('/api');
 
   await app.listen(configService.get('PORT'), (err, address) => {
     if (err) {

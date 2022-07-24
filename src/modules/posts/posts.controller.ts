@@ -1,4 +1,7 @@
 import { Controller } from '@nestjs/common';
 
-@Controller('posts')
+@Controller({
+  path: 'posts',
+  version: '1',
+})
 export class PostsController {}

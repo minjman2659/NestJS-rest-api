@@ -6,7 +6,7 @@ import {
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { LoggerService } from './providers/logger';
+import { LoggerService } from '@providers/logger';
 
 async function bootstrap() {
   const logger = new LoggerService();

@@ -36,7 +36,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
         log += `reason: ${(exception.getResponse() as any)?.message}`;
       }
 
-      log += `stack: ${exception.stack.slice(0, 100)}`;
+      log += `\n stack: ${exception.stack}`;
 
       this.logger.log(log);
       return reply.status(exception.getStatus()).send(exception.getResponse());

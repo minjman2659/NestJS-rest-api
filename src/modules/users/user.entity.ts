@@ -8,7 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { PostEntity } from '../posts/post.entity';
+import { PostEntity } from '@modules/posts/post.entity';
 
 @Index('email', ['email'], { unique: true })
 @Entity({ name: 'Users' })
@@ -22,7 +22,7 @@ export class UserEntity {
   name: string;
 
   @IsString()
-  @Column({ length: 10, type: 'varchar', nullable: true, select: false }) // social 로그인일 경우 비밀번호 없을 수도 있음!
+  @Column({ type: 'varchar', nullable: true, select: false }) // social 로그인일 경우 비밀번호 없을 수도 있음!
   password: string;
 
   @IsEmail({}, { message: '올바른 이메일을 작성해주세요.' })
@@ -33,6 +33,10 @@ export class UserEntity {
   @IsBoolean()
   @Column({ type: 'boolean', default: false })
   isAdmin: boolean;
+
+  @IsBoolean()
+  @Column({ type: 'boolean', default: false })
+  isSeceder: boolean;
 
   @Column()
   @CreateDateColumn()

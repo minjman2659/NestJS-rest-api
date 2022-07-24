@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { UserEntity } from './user.entity';
@@ -27,6 +31,10 @@ export class UsersService {
 
     if (!user) {
       throw new NotFoundException('존재하지 않는 유저입니다.');
+    }
+
+    if (user.isSeceder) {
+      throw new ForbiddenException('탈퇴한 유저입니다.');
     }
 
     return user;

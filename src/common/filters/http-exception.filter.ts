@@ -5,7 +5,7 @@ import {
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
-import { LoggerService } from 'src/providers/logger';
+import { LoggerService } from '@providers/logger';
 import { FastifyReply, FastifyRequest } from 'fastify';
 
 @Catch()

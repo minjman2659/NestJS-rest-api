@@ -1,4 +1,3 @@
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { NestFactory } from '@nestjs/core';
 import {
   FastifyAdapter,
@@ -6,6 +5,8 @@ import {
 } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import fastifyCookie from '@fastify/cookie';
+import { ValidationPipe } from '@common/pipes';
+import { HttpExceptionFilter } from '@common/filters';
 import { AppModule } from './app.module';
 import { LoggerService } from '@providers/logger';
 
@@ -26,6 +27,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalFilters(new HttpExceptionFilter(logger));
+  app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('/api');
 
   await app.register(fastifyCookie, {

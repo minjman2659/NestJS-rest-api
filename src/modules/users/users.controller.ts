@@ -7,7 +7,6 @@ import {
   Query,
 } from '@nestjs/common';
 import { FastifyReply } from 'fastify';
-import { ValidationPipe } from '@common/pipes/validation.pipe';
 import { UsersService } from './users.service';
 import { getUsersQueryDto } from './dto';
 
@@ -20,10 +19,7 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(
-    @Query(new ValidationPipe()) query: getUsersQueryDto,
-    @Res() reply: FastifyReply,
-  ) {
+  async findAll(@Query() query: getUsersQueryDto, @Res() reply: FastifyReply) {
     const { page, limit } = query;
     const data = await this.usersService.findAll(page, limit);
     reply.status(200).send(data);

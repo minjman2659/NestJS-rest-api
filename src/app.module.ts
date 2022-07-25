@@ -1,14 +1,11 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import { APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { configuration, validationSchema } from './config';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UsersModule } from '@modules/users/users.module';
 import { PostsModule } from '@modules/posts/posts.module';
 import { LoggerModule } from '@providers/logger';
-import { HttpExceptionFilter } from '@common/filters';
-import { ValidationPipe } from '@common/pipes';
 import { mode } from '@common/helpers';
 import { AppController } from './app.controller';
 
@@ -44,13 +41,6 @@ const typeOrmModuleOptions = {
     LoggerModule,
     PostsModule,
     AuthModule,
-  ],
-  providers: [
-    { provide: APP_FILTER, useClass: HttpExceptionFilter },
-    {
-      provide: APP_PIPE,
-      useClass: ValidationPipe,
-    },
   ],
   controllers: [AppController],
 })

@@ -11,7 +11,6 @@ import {
 import { AuthService } from './auth.service';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
 import { emailValidator, mode } from '@common/helpers';
-import { ValidationPipe } from '@common/pipes';
 import { FastifyReply } from 'fastify';
 
 @Controller({
@@ -35,20 +34,14 @@ export class AuthController {
   }
 
   @Post('register')
-  async register(
-    @Body(new ValidationPipe()) body: CreateUserBodyDto,
-    @Res() reply: FastifyReply,
-  ) {
+  async register(@Body() body: CreateUserBodyDto, @Res() reply: FastifyReply) {
     const { accessToken, refreshToken } = await this.authService.create(body);
     this.setCookie(reply, 'in', refreshToken);
     reply.status(201).send({ accessToken });
   }
 
   @Post('login')
-  async login(
-    @Body(new ValidationPipe()) body: LoginBodyDto,
-    @Res() reply: FastifyReply,
-  ) {
+  async login(@Body() body: LoginBodyDto, @Res() reply: FastifyReply) {
     const { userData, accessToken, refreshToken } =
       await this.authService.login(body);
 

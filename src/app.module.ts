@@ -25,8 +25,8 @@ const typeOrmModuleOptions = {
     database: configService.get('POSTGRES_DATABASE'),
     entities: [__dirname + '/**/*.entity{.ts,.js}'],
     migrations: [__dirname + '/migrations/**/*{.ts,.js}'],
-    synchronize: configService.get('NODE_ENV') === 'production' ? false : true,
-    // logging: configService.get('NODE_ENV') === 'production' ? false : true,
+    synchronize: mode.isProd ? false : true,
+    // logging: mode.isProd ? false : true,
   }),
   inject: [ConfigService],
 };

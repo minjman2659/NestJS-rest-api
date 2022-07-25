@@ -4,6 +4,7 @@ import * as path from 'path';
 import { Injectable, LoggerService as LS } from '@nestjs/common';
 import * as winston from 'winston';
 import { format } from 'date-fns';
+import { mode } from '@common/helpers';
 
 @Injectable()
 export class LoggerService implements LS {
@@ -20,7 +21,7 @@ export class LoggerService implements LS {
 
     this.logDir = logDir;
 
-    const isDevelopment = process.env.NODE_ENV === 'development';
+    const isDevelopment = mode.isDev;
 
     const levels = {
       error: 0,

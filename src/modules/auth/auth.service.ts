@@ -42,6 +42,8 @@ export class AuthService {
     await this.findByEmail(email);
 
     try {
+      let accessToken: string = null;
+      let refreshToken: string = null;
       await this.dataSource.transaction(async (manager) => {
         const user = new UserEntity();
         user.name = name;
@@ -51,7 +53,13 @@ export class AuthService {
           user.isAdmin = isAdmin;
         }
         await manager.save(user);
+        const { accessToken: AT } = await user.generateAccessToken();
+        const { refreshToken: RT } = await user.generateRefreshToken();
+        accessToken = AT;
+        refreshToken = RT;
       });
+
+      return { accessToken, refreshToken };
     } catch (err) {
       throw new InternalServerErrorException(err);
     }
@@ -86,7 +94,11 @@ export class AuthService {
     }
 
     const { id, email: userEmail, name, createdAt, updatedAt } = user;
-    return { id, email: userEmail, name, createdAt, updatedAt };
+    const userData = { id, email: userEmail, name, createdAt, updatedAt };
+    const { accessToken } = await user.generateAccessToken();
+    const { refreshToken } = await user.generateRefreshToken();
+
+    return { userData, accessToken, refreshToken };
   }
 
   async signout() {

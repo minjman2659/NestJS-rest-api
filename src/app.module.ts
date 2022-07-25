@@ -9,6 +9,8 @@ import { PostsModule } from '@modules/posts/posts.module';
 import { LoggerModule } from '@providers/logger';
 import { HttpExceptionFilter } from '@common/filters';
 import { ValidationPipe } from '@common/pipes';
+import { mode } from '@common/helpers';
+import { AppController } from './app.controller';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -33,8 +35,7 @@ const typeOrmModuleOptions = {
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath:
-        process.env.NODE_ENV === 'production' ? '.env.prod' : '.env.dev',
+      envFilePath: mode.isProd ? '.env.prod' : '.env.dev',
       load: [configuration],
       validationSchema,
     }),
@@ -51,5 +52,6 @@ const typeOrmModuleOptions = {
       useClass: ValidationPipe,
     },
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

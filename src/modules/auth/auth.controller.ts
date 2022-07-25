@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
-import { emailValidator } from '@common/helpers';
+import { emailValidator, mode } from '@common/helpers';
 import { ValidationPipe } from '@common/pipes';
 import { FastifyReply } from 'fastify';
 
@@ -39,32 +39,53 @@ export class AuthController {
     @Body(new ValidationPipe()) body: CreateUserBodyDto,
     @Res() reply: FastifyReply,
   ) {
-    await this.authService.create(body);
-    reply.status(201).send('Created');
+    const { accessToken, refreshToken } = await this.authService.create(body);
+    this.setCookie(reply, 'in', refreshToken);
+    reply.status(201).send({ accessToken });
   }
 
   @Post('login')
-  async login(@Body(new ValidationPipe()) body: LoginBodyDto) {
-    const user = await this.authService.login(body);
-    return user;
+  async login(
+    @Body(new ValidationPipe()) body: LoginBodyDto,
+    @Res() reply: FastifyReply,
+  ) {
+    const { userData, accessToken, refreshToken } =
+      await this.authService.login(body);
+
+    this.setCookie(reply, 'in', refreshToken);
+    reply.status(201).send({ accessToken, user: userData });
   }
 
   @Post('logout')
   logout(@Res() reply: FastifyReply) {
-    reply.setCookie('refreshToken', null, {
-      maxAge: 0,
-      httpOnly: true,
-    });
+    this.setCookie(reply, 'out');
     reply.status(200).send({ accessToken: null });
   }
 
   @Delete('signout')
   signout(@Res() reply: FastifyReply) {
     // this.authService.signout 실행한 뒤,
-    reply.setCookie('refreshToken', null, {
-      maxAge: 0,
-      httpOnly: true,
-    });
+    this.setCookie(reply, 'out');
     reply.status(200).send({ accessToken: null });
+  }
+
+  private setCookie(
+    reply: FastifyReply,
+    status: 'in' | 'out',
+    refreshToken?: string,
+  ) {
+    if (status === 'in') {
+      reply.setCookie('refreshToken', refreshToken, {
+        httpOnly: true,
+        secure: mode.isProd,
+        sameSite: mode.isProd ? 'none' : undefined,
+        maxAge: 60 * 60 * 24 * 30, // 30 days
+      });
+    } else {
+      reply.setCookie('refreshToken', null, {
+        maxAge: 0,
+        httpOnly: true,
+      });
+    }
   }
 }

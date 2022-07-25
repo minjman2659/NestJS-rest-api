@@ -1,6 +1,17 @@
-import { Controller, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Res,
+  Param,
+  ParseIntPipe,
+  Query,
+} from '@nestjs/common';
+import { FastifyReply } from 'fastify';
+import { ValidationPipe } from '@common/pipes/validation.pipe';
 import { UsersService } from './users.service';
+import { getUsersQueryDto } from './dto';
 
+// admin 유저만 가능하도록 할 것!
 @Controller({
   path: 'users',
   version: '1',
@@ -8,9 +19,22 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // admin 유저만 가능하도록 할 것!
+  @Get()
+  async findAll(
+    @Query(new ValidationPipe()) query: getUsersQueryDto,
+    @Res() reply: FastifyReply,
+  ) {
+    const { page, limit } = query;
+    const data = await this.usersService.findAll(page, limit);
+    reply.status(200).send(data);
+  }
+
   @Get(':id')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.usersService.findOne(id);
+  async findOne(
+    @Param('id', ParseIntPipe) id: number,
+    @Res() reply: FastifyReply,
+  ) {
+    const user = await this.usersService.findOne(id);
+    reply.status(200).send(user);
   }
 }

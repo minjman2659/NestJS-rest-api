@@ -5,9 +5,11 @@ import { configuration, validationSchema } from './config';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UsersModule } from '@modules/users/users.module';
 import { PostsModule } from '@modules/posts/posts.module';
+import { TokenModule } from '@providers/token/token.module';
 import { LoggerModule } from '@providers/logger';
 import { mode } from '@common/helpers';
 import { AppController } from './app.controller';
+import { CoreModule } from '@providers/core/core.module';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -41,6 +43,8 @@ const typeOrmModuleOptions = {
     LoggerModule,
     PostsModule,
     AuthModule,
+    TokenModule,
+    CoreModule,
   ],
   controllers: [AppController],
 })

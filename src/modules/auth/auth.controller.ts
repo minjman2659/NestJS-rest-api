@@ -7,10 +7,12 @@ import {
   Post,
   Query,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
 import { emailValidator, mode } from '@common/helpers';
+import { AuthGuard } from '@common/guards';
 import { FastifyReply } from 'fastify';
 
 @Controller({
@@ -49,6 +51,7 @@ export class AuthController {
     reply.status(201).send({ accessToken, user: userData });
   }
 
+  @UseGuards(AuthGuard)
   @Post('logout')
   logout(@Res() reply: FastifyReply) {
     this.setCookie(reply, 'out');

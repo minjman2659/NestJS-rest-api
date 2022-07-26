@@ -8,9 +8,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import * as jwt from 'jsonwebtoken';
 import { PostEntity } from '@modules/posts/post.entity';
-import { AccessTokenPayload, RefreshTokenPayload } from './types';
 
 @Index('email', ['email'], { unique: true })
 @Entity({ name: 'Users' })
@@ -54,50 +52,4 @@ export class UserEntity {
     cascade: true,
   })
   posts: PostEntity[];
-
-  //* Instance Method */
-
-  async generateAccessToken() {
-    const payload: AccessTokenPayload = {
-      id: this.id,
-      email: this.email,
-      name: this.name,
-      isAdmin: this.isAdmin,
-      isSeceder: this.isSeceder,
-    };
-    const accessToken = await this.generateToken(payload, '24h');
-    return { accessToken };
-  }
-
-  async generateRefreshToken() {
-    const payload: RefreshTokenPayload = {
-      id: this.id,
-      email: this.email,
-    };
-    const refreshToken = await this.generateToken(payload, '30d');
-    return { refreshToken };
-  }
-
-  private generateToken(
-    payload: AccessTokenPayload | RefreshTokenPayload,
-    expiresIn: string | number,
-  ): Promise<string> {
-    const apiHost = process.env.API_HOST;
-    const jwtSecret = process.env.SECRET_KEY;
-
-    const jwtOptions: jwt.SignOptions = {
-      issuer: apiHost,
-      expiresIn,
-    };
-
-    return new Promise((resolve, reject) => {
-      jwt.sign(payload, jwtSecret, jwtOptions, (err, token) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(token);
-      });
-    });
-  }
 }

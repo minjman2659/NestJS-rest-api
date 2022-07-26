@@ -10,6 +10,7 @@ import { Repository, DataSource } from 'typeorm';
 import { UserEntity } from '@modules/users/user.entity';
 import { hashPassword, comparePassword } from '@common/helpers';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
+import { TokenService } from '@providers/token';
 
 @Injectable()
 export class AuthService {
@@ -17,6 +18,7 @@ export class AuthService {
     @InjectRepository(UserEntity)
     private readonly usersRepository: Repository<UserEntity>,
     private dataSource: DataSource,
+    private readonly tokenService: TokenService,
   ) {}
 
   async findByEmail(email: string) {
@@ -53,8 +55,18 @@ export class AuthService {
           user.isAdmin = isAdmin;
         }
         await manager.save(user);
-        const { accessToken: AT } = await user.generateAccessToken();
-        const { refreshToken: RT } = await user.generateRefreshToken();
+
+        const tokenPayload = {
+          id: user.id,
+          email: user.email,
+          isAdmin: user.isAdmin,
+        };
+        const { accessToken: AT } = await this.tokenService.generateAccessToken(
+          tokenPayload,
+        );
+        const { refreshToken: RT } =
+          await this.tokenService.generateRefreshToken(tokenPayload);
+
         accessToken = AT;
         refreshToken = RT;
       });
@@ -78,6 +90,7 @@ export class AuthService {
         'createdAt',
         'updatedAt',
         'isSeceder',
+        'isAdmin',
       ],
     });
 
@@ -93,10 +106,20 @@ export class AuthService {
       throw new ForbiddenException('패스워드가 다릅니다.');
     }
 
-    const { id, email: userEmail, name, createdAt, updatedAt } = user;
+    const { id, email: userEmail, name, createdAt, updatedAt, isAdmin } = user;
     const userData = { id, email: userEmail, name, createdAt, updatedAt };
-    const { accessToken } = await user.generateAccessToken();
-    const { refreshToken } = await user.generateRefreshToken();
+    const tokenPayload = {
+      id,
+      email: userEmail,
+      isAdmin,
+    };
+
+    const { accessToken } = await this.tokenService.generateAccessToken(
+      tokenPayload,
+    );
+    const { refreshToken } = await this.tokenService.generateRefreshToken(
+      tokenPayload,
+    );
 
     return { userData, accessToken, refreshToken };
   }

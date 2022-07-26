@@ -11,6 +11,7 @@ import { UserEntity } from '@modules/users/user.entity';
 import { hashPassword, comparePassword } from '@common/helpers';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
 import { TokenService } from '@providers/token';
+import { TokenPayload } from '@common/types/token';
 
 @Injectable()
 export class AuthService {
@@ -60,6 +61,7 @@ export class AuthService {
           id: user.id,
           email: user.email,
           isAdmin: user.isAdmin,
+          isSeceder: user.isSeceder,
         };
         const { accessToken: AT } = await this.tokenService.generateAccessToken(
           tokenPayload,
@@ -106,12 +108,21 @@ export class AuthService {
       throw new ForbiddenException('패스워드가 다릅니다.');
     }
 
-    const { id, email: userEmail, name, createdAt, updatedAt, isAdmin } = user;
+    const {
+      id,
+      email: userEmail,
+      name,
+      createdAt,
+      updatedAt,
+      isAdmin,
+      isSeceder,
+    } = user;
     const userData = { id, email: userEmail, name, createdAt, updatedAt };
     const tokenPayload = {
       id,
       email: userEmail,
       isAdmin,
+      isSeceder,
     };
 
     const { accessToken } = await this.tokenService.generateAccessToken(
@@ -124,11 +135,17 @@ export class AuthService {
     return { userData, accessToken, refreshToken };
   }
 
-  async signout() {
-    // 로그인 중인 유저의 아이디를 알아내고,
-    // 해당 아이디로 유저 정보를 find 한 뒤,
-    // isSeceder의 값을 true로 업데이트한다.
-    // refreshToken 쿠키 값을 null로 set 하고,
-    // 200 status code와 함께 { accessToken: null } 값을 응답한다.
+  async signout(user: TokenPayload) {
+    if (user.isSeceder) {
+      throw new ConflictException('이미 탈퇴한 유저 입니다.');
+    }
+
+    try {
+      await this.dataSource.transaction(async (manager) => {
+        await manager.update(UserEntity, { id: user.id }, { isSeceder: true });
+      });
+    } catch (err) {
+      throw new InternalServerErrorException(err);
+    }
   }
 }

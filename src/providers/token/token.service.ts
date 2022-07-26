@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as jwt from 'jsonwebtoken';
-import { FastifyRequest } from 'fastify';
-import { TokenPayload } from './types';
+import { FastifyRequestWithUser } from '@common/types/fastify';
+import { TokenPayload } from '@common/types/token';
 
 @Injectable()
 export class TokenService {
@@ -38,45 +38,48 @@ export class TokenService {
     });
   }
 
-  async authorizeToken(req: FastifyRequest) {
+  async authorizeToken(req: FastifyRequestWithUser) {
     if (!req.headers.authorization) {
       return false;
     }
     const accessToken = req.headers.authorization.split('Bearer ')[1];
     const refreshToken = req.cookies['refreshToken'];
-
     try {
+      //* accessToken이 없을 경우, refreshToken 검증을 위해 아래 catch문으로 이동
       if (!accessToken) {
         throw new Error('No Access Token');
       }
       const accessData: TokenPayload = await this.verifyJwt(accessToken);
-
-      return !!accessData;
+      //* accessData가 없을 경우, refreshToken 검증을 위해 아래 catch문으로 이동
+      if (!accessData) {
+        throw new Error('Access Token Error: None or Token_Expired');
+      }
+      //* accessData가 존재할 경우, 바로 true 리턴
+      return true;
     } catch (err) {
+      //* refreshToken이 없을 경우, 바로 false 리턴
       if (!refreshToken) {
         return false;
       }
       try {
         const refreshData: TokenPayload = await this.verifyJwt(refreshToken);
-
         return !!refreshData;
       } catch (err) {
-        console.log(err);
-        return false;
+        throw new Error(err);
       }
     }
   }
 
   verifyJwt(token: string): Promise<TokenPayload> {
     const jwtSecret = process.env.SECRET_KEY;
-
-    return new Promise((resolve, reject) => {
+    //* accessToken과 refreshToken 모두 검증하는 메소드
+    //* accessToken의 경우, 없거나 만료되더라도 refreshToken 검증도 진행해야 하므로,
+    //* 바로 에러를 발생시키는 것이 아니라, null을 리턴한다!
+    return new Promise((resolve) => {
       jwt.verify(token, jwtSecret, (err, decoded: TokenPayload) => {
         if (err) {
-          reject(err);
-        }
-        if (!decoded) {
-          throw new Error('Decoded JWT is undefined');
+          // console.error(err);
+          resolve(null);
         }
         resolve(decoded);
       });

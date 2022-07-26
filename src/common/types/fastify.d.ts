@@ -1,9 +1,10 @@
 import { FastifyRequest } from 'fastify';
 
-type User = {
+export type User = {
   id: number;
   email: string;
   isAdmin: boolean;
+  isSeceder: boolean;
 };
 
 declare interface FastifyRequestWithUser extends FastifyRequest {

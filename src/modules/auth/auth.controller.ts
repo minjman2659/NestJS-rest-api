@@ -6,6 +6,7 @@ import {
   Get,
   Post,
   Query,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { CreateUserBodyDto, LoginBodyDto } from './dto';
 import { emailValidator, mode } from '@common/helpers';
 import { AuthGuard } from '@common/guards';
 import { FastifyReply } from 'fastify';
+import { FastifyRequestWithUser } from '@common/types/fastify';
 
 @Controller({
   path: 'auth',
@@ -30,7 +32,6 @@ export class AuthController {
     if (!emailValidator(email)) {
       throw new BadRequestException('올바른 이메일을 입력해주세요.');
     }
-
     const { message } = await this.authService.findByEmail(email);
     reply.status(200).send(message);
   }
@@ -46,21 +47,23 @@ export class AuthController {
   async login(@Body() body: LoginBodyDto, @Res() reply: FastifyReply) {
     const { userData, accessToken, refreshToken } =
       await this.authService.login(body);
-
     this.setCookie(reply, 'in', refreshToken);
     reply.status(201).send({ accessToken, user: userData });
   }
 
-  @UseGuards(AuthGuard)
   @Post('logout')
   logout(@Res() reply: FastifyReply) {
     this.setCookie(reply, 'out');
     reply.status(200).send({ accessToken: null });
   }
 
+  @UseGuards(AuthGuard)
   @Delete('signout')
-  signout(@Res() reply: FastifyReply) {
-    // this.authService.signout 실행한 뒤,
+  async signout(
+    @Res() reply: FastifyReply,
+    @Req() request: FastifyRequestWithUser,
+  ) {
+    await this.authService.signout(request.user);
     this.setCookie(reply, 'out');
     reply.status(200).send({ accessToken: null });
   }

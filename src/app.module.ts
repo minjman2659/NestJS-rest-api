@@ -10,6 +10,8 @@ import { LoggerModule } from '@providers/logger';
 import { mode } from '@common/helpers';
 import { AppController } from './app.controller';
 import { CoreModule } from '@providers/core/core.module';
+import { ResponseInterceptor } from '@common/interceptors';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -47,5 +49,11 @@ const typeOrmModuleOptions = {
     CoreModule,
   ],
   controllers: [AppController],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+  ],
 })
 export class AppModule {}

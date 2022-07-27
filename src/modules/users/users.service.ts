@@ -1,3 +1,4 @@
+import { NOT_FOUND_USER } from '@common/constants';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -50,7 +51,7 @@ export class UsersService {
     });
 
     if (!user) {
-      throw new NotFoundException('존재하지 않는 유저입니다.');
+      throw new NotFoundException(NOT_FOUND_USER);
     }
 
     return user;

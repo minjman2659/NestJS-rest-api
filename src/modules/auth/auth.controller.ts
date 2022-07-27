@@ -9,6 +9,7 @@ import {
   Req,
   Res,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
@@ -25,47 +26,49 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Get('user')
-  async getUserByEmail(
-    @Query('email') email: string,
-    @Res() reply: FastifyReply,
-  ) {
+  @HttpCode(200)
+  async getUserByEmail(@Query('email') email: string) {
     if (!emailValidator(email)) {
       throw new BadRequestException('올바른 이메일을 입력해주세요.');
     }
     const { message } = await this.authService.findByEmail(email);
-    reply.status(200).send(message);
+    return { message };
   }
 
   @Post('register')
+  @HttpCode(201)
   async register(@Body() body: CreateUserBodyDto, @Res() reply: FastifyReply) {
     const { accessToken, refreshToken } = await this.authService.create(body);
     this.setCookie(reply, 'in', refreshToken);
-    reply.status(201).send({ accessToken });
+    return { accessToken };
   }
 
   @Post('login')
+  @HttpCode(200)
   async login(@Body() body: LoginBodyDto, @Res() reply: FastifyReply) {
     const { userData, accessToken, refreshToken } =
       await this.authService.login(body);
     this.setCookie(reply, 'in', refreshToken);
-    reply.status(201).send({ accessToken, user: userData });
+    return { accessToken, user: userData };
   }
 
   @Post('logout')
+  @HttpCode(200)
   logout(@Res() reply: FastifyReply) {
     this.setCookie(reply, 'out');
-    reply.status(200).send({ accessToken: null });
+    return { accessToken: null };
   }
 
   @UseGuards(AuthGuard)
   @Delete('signout')
+  @HttpCode(200)
   async signout(
     @Res() reply: FastifyReply,
     @Req() request: FastifyRequestWithUser,
   ) {
     await this.authService.signout(request.user);
     this.setCookie(reply, 'out');
-    reply.status(200).send({ accessToken: null });
+    return { accessToken: null };
   }
 
   private setCookie(

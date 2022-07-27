@@ -12,6 +12,13 @@ import { hashPassword, comparePassword } from '@common/helpers';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
 import { TokenService } from '@providers/token';
 import { TokenPayload } from '@common/types/token';
+import {
+  NOT_FOUND_USER,
+  DIFFERENT_PW,
+  ALREADY_SIGNED_OUT_USER,
+  ALREADY_SIGNED_UP_EMAIL,
+  POSSIBLE_EMAIL,
+} from '@common/constants';
 
 @Injectable()
 export class AuthService {
@@ -28,14 +35,14 @@ export class AuthService {
     });
 
     if (user && user.isSeceder) {
-      throw new ConflictException('탈퇴한 유저입니다.');
+      throw new ConflictException(ALREADY_SIGNED_OUT_USER);
     }
 
     if (user) {
-      throw new ConflictException('이미 가입된 이메일 입니다.');
+      throw new ConflictException(ALREADY_SIGNED_UP_EMAIL);
     }
 
-    return { message: '가입 가능한 이메일 입니다.' };
+    return { message: POSSIBLE_EMAIL };
   }
 
   async create(body: CreateUserBodyDto) {
@@ -97,15 +104,15 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new NotFoundException('존재하지 않는 유저 입니다.');
+      throw new NotFoundException(NOT_FOUND_USER);
     }
 
     if (user.isSeceder) {
-      throw new ConflictException('탈퇴한 유저입니다.');
+      throw new ConflictException(ALREADY_SIGNED_OUT_USER);
     }
 
     if (!comparePassword(password, user.password)) {
-      throw new ForbiddenException('패스워드가 다릅니다.');
+      throw new ForbiddenException(DIFFERENT_PW);
     }
 
     const {
@@ -137,7 +144,7 @@ export class AuthService {
 
   async signout(user: TokenPayload) {
     if (user.isSeceder) {
-      throw new ConflictException('이미 탈퇴한 유저 입니다.');
+      throw new ConflictException(ALREADY_SIGNED_OUT_USER);
     }
 
     try {

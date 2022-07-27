@@ -36,6 +36,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, Response<T>> {
           request,
         );
         if (newAccessToken) {
+          console.log('new : ', newAccessToken);
           data.accessToken = newAccessToken;
         }
 

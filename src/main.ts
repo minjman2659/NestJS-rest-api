@@ -7,6 +7,7 @@ import { ConfigService } from '@nestjs/config';
 import fastifyCookie from '@fastify/cookie';
 import { ValidationPipe } from '@common/pipes';
 import { HttpExceptionFilter } from '@common/filters';
+import { ResponseInterceptor } from '@common/interceptors';
 import { AppModule } from './app.module';
 import { LoggerService } from '@providers/logger';
 
@@ -27,6 +28,7 @@ async function bootstrap() {
     credentials: true,
   });
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new HttpExceptionFilter(logger));
   app.setGlobalPrefix('/api');
 

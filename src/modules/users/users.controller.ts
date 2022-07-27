@@ -1,12 +1,11 @@
 import {
   Controller,
   Get,
-  Res,
   Param,
   ParseIntPipe,
   Query,
+  HttpCode,
 } from '@nestjs/common';
-import { FastifyReply } from 'fastify';
 import { UsersService } from './users.service';
 import { getUsersQueryDto } from './dto';
 
@@ -19,18 +18,17 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async findAll(@Query() query: getUsersQueryDto, @Res() reply: FastifyReply) {
+  @HttpCode(200)
+  async findAll(@Query() query: getUsersQueryDto) {
     const { page, limit } = query;
-    const data = await this.usersService.findAll(page, limit);
-    reply.status(200).send(data);
+    const userList = await this.usersService.findAll(page, limit);
+    return userList;
   }
 
   @Get(':id')
-  async findOne(
-    @Param('id', ParseIntPipe) id: number,
-    @Res() reply: FastifyReply,
-  ) {
+  @HttpCode(200)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.usersService.findOne(id);
-    reply.status(200).send(user);
+    return user;
   }
 }

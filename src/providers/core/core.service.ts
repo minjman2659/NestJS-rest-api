@@ -3,7 +3,6 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { FastifyInstance } from 'fastify';
 import { TokenService } from '@providers/token';
 import { FastifyRequestWithUser } from '@common/types/fastify';
-import { TokenPayload } from '@common/types/token';
 
 @Injectable()
 export class CoreService implements OnModuleInit {
@@ -19,41 +18,7 @@ export class CoreService implements OnModuleInit {
 
     try {
       fastify.addHook('preHandler', async (request: FastifyRequestWithUser) => {
-        const accessToken = request.headers.authorization
-          ? request.headers.authorization.split('Bearer ')[1]
-          : null;
-        const refreshToken = request.cookies['refreshToken'] || null;
-
-        if (accessToken && !refreshToken) {
-          const accessData: TokenPayload = await this.tokenService.verifyJwt(
-            accessToken,
-          );
-          request.user = accessData;
-          return;
-        }
-
-        if (!accessToken && refreshToken) {
-          const refreshData: TokenPayload = await this.tokenService.verifyJwt(
-            refreshToken,
-          );
-          request.user = refreshData;
-          return;
-        }
-
-        if (accessToken && refreshToken) {
-          const accessData: TokenPayload = await this.tokenService.verifyJwt(
-            accessToken,
-          );
-          if (accessData) {
-            request.user = accessData;
-          } else {
-            if (refreshToken) {
-              const refreshData: TokenPayload =
-                await this.tokenService.verifyJwt(refreshToken);
-              request.user = refreshData;
-            }
-          }
-        }
+        await this.tokenService.authorizeToken(request);
       });
     } catch (err) {
       throw new Error(err);

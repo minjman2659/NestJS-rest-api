@@ -38,12 +38,11 @@ export class TokenService {
     });
   }
 
-  async authorizeToken(req: FastifyRequestWithUser) {
-    if (!req.headers.authorization) {
-      return false;
-    }
-    const accessToken = req.headers.authorization.split('Bearer ')[1];
-    const refreshToken = req.cookies['refreshToken'];
+  async authorizeToken(request: FastifyRequestWithUser) {
+    const accessToken = request.headers.authorization
+      ? request.headers.authorization.split('Bearer ')[1]
+      : null;
+    const refreshToken = request.cookies['refreshToken'] || null;
     try {
       //* accessToken이 없을 경우, refreshToken 검증을 위해 아래 catch문으로 이동
       if (!accessToken) {
@@ -54,23 +53,28 @@ export class TokenService {
       if (!accessData) {
         throw new Error('Access Token Error: None or Token_Expired');
       }
-      //* accessData가 존재할 경우, 바로 true 리턴
-      return true;
+      //* accessData가 존재할 경우, request.user값은 accessData
+      request.user = accessData;
     } catch (err) {
-      //* refreshToken이 없을 경우, 바로 false 리턴
+      //* refreshToken이 없을 경우, request.user 값은 null
       if (!refreshToken) {
-        return false;
+        request.user = null;
+        return;
       }
       try {
         const refreshData: TokenPayload = await this.verifyJwt(refreshToken);
-        return !!refreshData;
+        if (!refreshData) {
+          throw new Error('NO Refresh Token');
+        }
+        request.user = refreshData;
       } catch (err) {
-        throw new Error(err);
+        // console.error(err);
+        request.user = null;
       }
     }
   }
 
-  verifyJwt(token: string): Promise<TokenPayload> {
+  private verifyJwt(token: string): Promise<TokenPayload> {
     const jwtSecret = process.env.SECRET_KEY;
     //* accessToken과 refreshToken 모두 검증하는 메소드
     //* accessToken의 경우, 없거나 만료되더라도 refreshToken 검증도 진행해야 하므로,

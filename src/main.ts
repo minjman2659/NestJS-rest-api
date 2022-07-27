@@ -9,6 +9,7 @@ import { ValidationPipe } from '@common/pipes';
 import { HttpExceptionFilter } from '@common/filters';
 import { AppModule } from './app.module';
 import { LoggerService } from '@providers/logger';
+import { ResponseInterceptor } from '@common/interceptors';
 
 async function bootstrap() {
   const logger = new LoggerService();
@@ -28,6 +29,7 @@ async function bootstrap() {
   });
   app.useGlobalFilters(new HttpExceptionFilter(logger));
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new ResponseInterceptor());
   app.setGlobalPrefix('/api');
 
   await app.register(fastifyCookie, {

@@ -54,6 +54,6 @@ export class UsersService {
       throw new NotFoundException(NOT_FOUND_USER);
     }
 
-    return user;
+    return { user };
   }
 }

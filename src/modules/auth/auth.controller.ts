@@ -17,6 +17,12 @@ import { emailValidator, mode } from '@common/helpers';
 import { AuthGuard } from '@common/guards';
 import { FastifyReply } from 'fastify';
 import { FastifyRequestWithUser } from '@common/types/fastify';
+import {
+  LOG_OUT_SUCCESS,
+  SIGN_OUT_SUCCESS,
+  POSSIBLE_EMAIL,
+} from '@common/constants';
+import { ResponseMessage } from '@common/decorators';
 
 @Controller({
   path: 'auth',
@@ -27,12 +33,13 @@ export class AuthController {
 
   @Get('user')
   @HttpCode(200)
+  @ResponseMessage(POSSIBLE_EMAIL)
   async getUserByEmail(@Query('email') email: string) {
     if (!emailValidator(email)) {
       throw new BadRequestException('올바른 이메일을 입력해주세요.');
     }
-    const { message } = await this.authService.findByEmail(email);
-    return { message };
+    await this.authService.findByEmail(email);
+    return;
   }
 
   @Post('register')
@@ -54,21 +61,23 @@ export class AuthController {
 
   @Post('logout')
   @HttpCode(200)
+  @ResponseMessage(LOG_OUT_SUCCESS)
   logout(@Res() reply: FastifyReply) {
     this.setCookie(reply, 'out');
-    return { accessToken: null };
+    return { message: LOG_OUT_SUCCESS };
   }
 
   @UseGuards(AuthGuard)
   @Delete('signout')
   @HttpCode(200)
+  @ResponseMessage(SIGN_OUT_SUCCESS)
   async signout(
     @Res() reply: FastifyReply,
     @Req() request: FastifyRequestWithUser,
   ) {
     await this.authService.signout(request.user);
     this.setCookie(reply, 'out');
-    return { accessToken: null };
+    return { message: SIGN_OUT_SUCCESS };
   }
 
   private setCookie(

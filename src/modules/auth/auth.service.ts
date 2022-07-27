@@ -17,7 +17,6 @@ import {
   DIFFERENT_PW,
   ALREADY_SIGNED_OUT_USER,
   ALREADY_SIGNED_UP_EMAIL,
-  POSSIBLE_EMAIL,
 } from '@common/constants';
 
 @Injectable()
@@ -42,7 +41,7 @@ export class AuthService {
       throw new ConflictException(ALREADY_SIGNED_UP_EMAIL);
     }
 
-    return { message: POSSIBLE_EMAIL };
+    return;
   }
 
   async create(body: CreateUserBodyDto) {

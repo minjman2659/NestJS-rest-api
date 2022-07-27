@@ -74,6 +74,27 @@ export class TokenService {
     }
   }
 
+  async reissueAccessToken(request: FastifyRequestWithUser) {
+    const accessToken = request.headers.authorization
+      ? request.headers.authorization.split('Bearer ')[1]
+      : null;
+    const refreshToken = request.cookies['refreshToken'] || null;
+
+    let newAccessToken: string = null;
+    if (accessToken && refreshToken) {
+      const accessData: TokenPayload = await this.verifyJwt(accessToken);
+      const refreshData: TokenPayload = await this.verifyJwt(refreshToken);
+      if (!accessData && refreshData) {
+        const { id, email, isAdmin, isSeceder } = refreshData;
+        const payload = { id, email, isAdmin, isSeceder };
+        const { accessToken } = await this.generateAccessToken(payload);
+        newAccessToken = accessToken;
+      }
+    }
+
+    return { newAccessToken };
+  }
+
   private verifyJwt(token: string): Promise<TokenPayload> {
     const jwtSecret = process.env.SECRET_KEY;
     //* accessToken과 refreshToken 모두 검증하는 메소드

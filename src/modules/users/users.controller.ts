@@ -5,15 +5,18 @@ import {
   ParseIntPipe,
   Query,
   HttpCode,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { getUsersQueryDto } from './dto';
+import { AuthGuard } from '@common/guards';
 
 // admin 유저만 가능하도록 할 것!
 @Controller({
   path: 'users',
   version: '1',
 })
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -28,7 +31,7 @@ export class UsersController {
   @Get(':id')
   @HttpCode(200)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    const user = await this.usersService.findOne(id);
-    return user;
+    const { user } = await this.usersService.findOne(id);
+    return { user };
   }
 }

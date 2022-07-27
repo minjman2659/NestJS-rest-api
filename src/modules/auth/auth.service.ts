@@ -28,7 +28,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
   ) {}
 
-  async findByEmail(email: string) {
+  private async findByEmail(email: string) {
     const user = await this.usersRepository.findOne({
       where: { email },
     });

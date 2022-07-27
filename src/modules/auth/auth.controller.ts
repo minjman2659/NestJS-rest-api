@@ -1,11 +1,8 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
-  Get,
   Post,
-  Query,
   Req,
   Res,
   UseGuards,
@@ -13,15 +10,11 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserBodyDto, LoginBodyDto } from './dto';
-import { emailValidator, mode } from '@common/helpers';
+import { mode } from '@common/helpers';
 import { AuthGuard } from '@common/guards';
 import { FastifyReply } from 'fastify';
 import { FastifyRequestWithUser } from '@common/types/fastify';
-import {
-  LOG_OUT_SUCCESS,
-  SIGN_OUT_SUCCESS,
-  POSSIBLE_EMAIL,
-} from '@common/constants';
+import { LOG_OUT_SUCCESS, SIGN_OUT_SUCCESS } from '@common/constants';
 import { ResponseMessage } from '@common/decorators';
 
 @Controller({
@@ -30,17 +23,6 @@ import { ResponseMessage } from '@common/decorators';
 })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
-
-  @Get('user')
-  @HttpCode(200)
-  @ResponseMessage(POSSIBLE_EMAIL)
-  async getUserByEmail(@Query('email') email: string) {
-    if (!emailValidator(email)) {
-      throw new BadRequestException('올바른 이메일을 입력해주세요.');
-    }
-    await this.authService.findByEmail(email);
-    return;
-  }
 
   @Post('register')
   @HttpCode(201)

@@ -46,7 +46,7 @@ export class AuthController {
   @ResponseMessage(LOG_OUT_SUCCESS)
   logout(@Res() reply: FastifyReply) {
     this.setCookie(reply, 'out');
-    return { message: LOG_OUT_SUCCESS };
+    return;
   }
 
   @UseGuards(AuthGuard)
@@ -59,7 +59,7 @@ export class AuthController {
   ) {
     await this.authService.signout(request.user);
     this.setCookie(reply, 'out');
-    return { message: SIGN_OUT_SUCCESS };
+    return;
   }
 
   private setCookie(
@@ -71,7 +71,7 @@ export class AuthController {
       reply.setCookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: mode.isProd,
-        sameSite: mode.isProd ? 'none' : undefined,
+        sameSite: 'none',
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
     } else {

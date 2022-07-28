@@ -8,7 +8,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { getUsersQueryDto } from './dto';
+import { GetUsersQueryDto } from './dto';
 import { AuthGuard } from '@common/guards';
 
 // admin 유저만 가능하도록 할 것!
@@ -22,7 +22,7 @@ export class UsersController {
 
   @Get()
   @HttpCode(200)
-  async findAll(@Query() query: getUsersQueryDto) {
+  async findAll(@Query() query: GetUsersQueryDto) {
     const { page, limit } = query;
     const userList = await this.usersService.findAll(page, limit);
     return userList;

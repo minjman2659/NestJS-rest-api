@@ -15,6 +15,7 @@ export class PostEntity {
   id: number;
 
   @IsNumber()
+  @Column({ type: 'integer', nullable: false })
   userId: number;
 
   @IsString()
@@ -26,6 +27,7 @@ export class PostEntity {
   @Column({ type: 'text', nullable: true }) // 임시저장 상태일 경우 콘텐츠는 없을 수 있음!
   content: string;
 
+  @IsString()
   @Column({ type: 'varchar', nullable: true })
   thumbnail: string;
 

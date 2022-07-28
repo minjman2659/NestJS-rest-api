@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsInt, IsNotEmpty, Min } from 'class-validator';
 
-export class GetUsersQueryDto {
+export class GetPostsQueryDto {
   @IsInt()
   @Type(() => Number)
   @IsNotEmpty()

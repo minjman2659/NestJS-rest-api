@@ -42,12 +42,12 @@ const typeOrmModuleOptions = {
       validationSchema,
     }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
+    CoreModule,
     UsersModule,
     LoggerModule,
     PostsModule,
     AuthModule,
     TokenModule,
-    CoreModule,
   ],
   controllers: [AppController],
   providers: [

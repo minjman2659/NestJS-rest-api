@@ -12,7 +12,7 @@ import { AppController } from './app.controller';
 import { CoreModule } from '@providers/core/core.module';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '@common/filters';
-import { ResponseInterceptor } from '@common/interceptors';
+import { ResponseInterceptor, TimeoutInterceptor } from '@common/interceptors';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
@@ -58,6 +58,10 @@ const typeOrmModuleOptions = {
     {
       provide: APP_INTERCEPTOR,
       useClass: ResponseInterceptor,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TimeoutInterceptor,
     },
   ],
 })

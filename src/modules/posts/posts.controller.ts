@@ -1,4 +1,3 @@
-import { CreateAndUpdatePostBodyDto, GetPostsQueryDto } from './dto';
 import {
   Body,
   Controller,
@@ -22,7 +21,17 @@ import {
   UPDATE_POST_SUCCESS,
 } from '@common/constants';
 import { AuthGuard } from '@common/guards';
+import { CreateAndUpdatePostBodyDto, GetPostsQueryDto } from './dto/request';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  FindAllDto,
+  FindOneDto,
+  CreateDto,
+  UpdateDto,
+  DeleteDto,
+} from './dto/response';
 
+@ApiTags('Post')
 @Controller({
   path: 'posts',
   version: '1',
@@ -30,6 +39,14 @@ import { AuthGuard } from '@common/guards';
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
+  @ApiOperation({
+    summary: '포스트 리스트 조회하기',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    type: FindAllDto,
+  })
   @Get()
   @HttpCode(200)
   async findAll(@Query() query: GetPostsQueryDto) {
@@ -38,6 +55,18 @@ export class PostsController {
     return postList;
   }
 
+  @ApiOperation({
+    summary: '포스트 상세 조회하기',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    type: FindOneDto,
+  })
+  @ApiResponse({
+    status: 404,
+    description: '존재하지 않는 포스트 입니다',
+  })
   @Get(':postId')
   @HttpCode(200)
   async findOne(@Param('postId', ParseIntPipe) postId: number) {
@@ -45,6 +74,18 @@ export class PostsController {
     return { post };
   }
 
+  @ApiOperation({
+    summary: '포스트 생성하기',
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Created',
+    type: CreateDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '로그인 권한이 없습니다',
+  })
   @UseGuards(AuthGuard)
   @Post()
   @HttpCode(201)
@@ -58,6 +99,26 @@ export class PostsController {
     return;
   }
 
+  @ApiOperation({
+    summary: '포스트 수정하기',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    type: UpdateDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '로그인 권한이 없습니다',
+  })
+  @ApiResponse({
+    status: 403,
+    description: '포스트 작성자가 아닙니다',
+  })
+  @ApiResponse({
+    status: 404,
+    description: '존재하지 않는 포스트 입니다',
+  })
   @UseGuards(AuthGuard)
   @Patch(':postId')
   @HttpCode(200)
@@ -72,6 +133,26 @@ export class PostsController {
     return;
   }
 
+  @ApiOperation({
+    summary: '포스트 삭제하기',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'OK',
+    type: DeleteDto,
+  })
+  @ApiResponse({
+    status: 401,
+    description: '로그인 권한이 없습니다',
+  })
+  @ApiResponse({
+    status: 403,
+    description: '포스트 작성자가 아닙니다',
+  })
+  @ApiResponse({
+    status: 404,
+    description: '존재하지 않는 포스트 입니다',
+  })
   @UseGuards(AuthGuard)
   @Delete(':postId')
   @HttpCode(200)

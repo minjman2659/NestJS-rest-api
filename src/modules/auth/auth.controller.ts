@@ -100,6 +100,14 @@ export class AuthController {
     description: 'OK',
     type: SignoutDto,
   })
+  @ApiResponse({
+    status: 401,
+    description: '로그인 권한이 없습니다',
+  })
+  @ApiResponse({
+    status: 409,
+    description: '탈퇴한 유저입니다',
+  })
   @UseGuards(AuthGuard)
   @Delete('signout')
   @HttpCode(200)

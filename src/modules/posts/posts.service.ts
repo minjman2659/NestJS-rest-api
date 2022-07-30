@@ -36,9 +36,9 @@ export class PostsService {
     return { posts, count };
   }
 
-  async findOne(id: number) {
+  async findOne(postId: number) {
     const post = await this.postsRepository.findOne({
-      where: { id },
+      where: { id: postId },
       select: { user: { name: true, email: true } },
       relations: ['user'],
     });
@@ -68,8 +68,12 @@ export class PostsService {
     }
   }
 
-  async update(id: number, body: CreateAndUpdatePostBodyDto, userId: number) {
-    const post = await this.postsRepository.findOne({ where: { id } });
+  async update(
+    postId: number,
+    body: CreateAndUpdatePostBodyDto,
+    userId: number,
+  ) {
+    const post = await this.postsRepository.findOne({ where: { id: postId } });
 
     if (!post) {
       throw new NotFoundException(NOT_FOUND_POST);
@@ -79,11 +83,11 @@ export class PostsService {
       throw new ForbiddenException(NOT_AUTHOR_OF_POST);
     }
 
-    await this.postsRepository.update({ id }, { ...body });
+    await this.postsRepository.update({ id: postId }, { ...body });
   }
 
-  async delete(id: number, userId: number) {
-    const post = await this.postsRepository.findOne({ where: { id } });
+  async delete(postId: number, userId: number) {
+    const post = await this.postsRepository.findOne({ where: { id: postId } });
 
     if (!post) {
       throw new NotFoundException(NOT_FOUND_POST);
@@ -93,6 +97,6 @@ export class PostsService {
       throw new ForbiddenException(NOT_AUTHOR_OF_POST);
     }
 
-    await this.postsRepository.delete({ id });
+    await this.postsRepository.delete({ id: postId });
   }
 }

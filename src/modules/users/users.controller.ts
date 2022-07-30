@@ -28,10 +28,10 @@ export class UsersController {
     return userList;
   }
 
-  @Get(':id')
+  @Get(':userId')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const { user } = await this.usersService.findOne(id);
+  async findOne(@Param('userId', ParseIntPipe) userId: number) {
+    const { user } = await this.usersService.findOne(userId);
     return { user };
   }
 }

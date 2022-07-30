@@ -35,9 +35,9 @@ export class UsersService {
     return { users, count };
   }
 
-  async findOne(id: number) {
+  async findOne(userId: number) {
     const user = await this.usersRepository.findOne({
-      where: { id },
+      where: { id: userId },
       select: {
         posts: {
           id: true,

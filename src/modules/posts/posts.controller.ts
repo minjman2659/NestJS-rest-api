@@ -38,10 +38,10 @@ export class PostsController {
     return postList;
   }
 
-  @Get(':id')
+  @Get(':postId')
   @HttpCode(200)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const { post } = await this.postsService.findOne(id);
+  async findOne(@Param('postId', ParseIntPipe) postId: number) {
+    const { post } = await this.postsService.findOne(postId);
     return { post };
   }
 
@@ -59,29 +59,29 @@ export class PostsController {
   }
 
   @UseGuards(AuthGuard)
-  @Patch(':id')
+  @Patch(':postId')
   @HttpCode(200)
   @ResponseMessage(UPDATE_POST_SUCCESS)
   async update(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('postId', ParseIntPipe) postId: number,
     @Body() body: CreateAndUpdatePostBodyDto,
     @Req() request: FastifyRequestWithUser,
   ) {
     const { id: userId } = request.user;
-    await this.postsService.update(id, body, userId);
+    await this.postsService.update(postId, body, userId);
     return;
   }
 
   @UseGuards(AuthGuard)
-  @Delete(':id')
+  @Delete(':postId')
   @HttpCode(200)
   @ResponseMessage(DELETE_POST_SUCCESS)
   async delete(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('postId', ParseIntPipe) postId: number,
     @Req() request: FastifyRequestWithUser,
   ) {
     const { id: userId } = request.user;
-    await this.postsService.delete(id, userId);
+    await this.postsService.delete(postId, userId);
     return;
   }
 }

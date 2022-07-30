@@ -7,8 +7,8 @@ import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import fastifyCookie from '@fastify/cookie';
 import { ValidationPipe } from '@common/pipes';
-import { AppModule } from './app.module';
 import { LoggerService } from '@providers/logger';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const logger = new LoggerService();

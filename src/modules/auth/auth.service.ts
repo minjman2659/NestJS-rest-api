@@ -8,16 +8,16 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { UserEntity } from '@modules/users/user.entity';
-import { hashPassword, comparePassword } from '@common/helpers';
-import { CreateUserBodyDto, LoginBodyDto } from './dto/request';
 import { TokenService } from '@providers/token';
-import { TokenPayload } from '@common/types/token';
+import { hashPassword, comparePassword } from '@common/helpers';
 import {
   NOT_FOUND_USER,
   DIFFERENT_PW,
   ALREADY_SIGNED_OUT_USER,
   ALREADY_SIGNED_UP_EMAIL,
 } from '@common/constants';
+import { TokenPayload } from '@common/types/token';
+import { CreateUserBodyDto, LoginBodyDto } from './dto/request';
 
 @Injectable()
 export class AuthService {

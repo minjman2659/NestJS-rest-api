@@ -8,15 +8,15 @@ import {
   UseGuards,
   HttpCode,
 } from '@nestjs/common';
-import { AuthService } from './auth.service';
-import { CreateUserBodyDto, LoginBodyDto } from './dto/request';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FastifyReply } from 'fastify';
 import { mode } from '@common/helpers';
 import { AuthGuard } from '@common/guards';
-import { FastifyReply } from 'fastify';
 import { FastifyRequestWithUser } from '@common/types/fastify';
 import { LOG_OUT_SUCCESS, SIGN_OUT_SUCCESS } from '@common/constants';
 import { ResponseMessage } from '@common/decorators';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AuthService } from './auth.service';
+import { CreateUserBodyDto, LoginBodyDto } from './dto/request';
 import { RegisterDto, LoginDto, LogoutDto, SignoutDto } from './dto/response';
 
 @ApiTags('Auth')

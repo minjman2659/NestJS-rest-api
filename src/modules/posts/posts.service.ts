@@ -1,4 +1,3 @@
-import { NOT_AUTHOR_OF_POST, NOT_FOUND_POST } from '@common/constants';
 import {
   ForbiddenException,
   Injectable,
@@ -7,8 +6,9 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
-import { CreateAndUpdatePostBodyDto } from './dto/request';
+import { NOT_AUTHOR_OF_POST, NOT_FOUND_POST } from '@common/constants';
 import { PostEntity } from './post.entity';
+import { CreateAndUpdatePostBodyDto } from './dto/request';
 
 @Injectable()
 export class PostsService {

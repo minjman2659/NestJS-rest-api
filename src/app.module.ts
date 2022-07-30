@@ -2,18 +2,18 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { configuration, validationSchema } from './config';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UsersModule } from '@modules/users/users.module';
 import { PostsModule } from '@modules/posts/posts.module';
+import { CoreModule } from '@providers/core/core.module';
 import { TokenModule } from '@providers/token/token.module';
 import { LoggerModule } from '@providers/logger';
 import { mode } from '@common/helpers';
-import { AppController } from './app.controller';
-import { CoreModule } from '@providers/core/core.module';
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '@common/filters';
 import { ResponseInterceptor, TimeoutInterceptor } from '@common/interceptors';
+import { AppController } from './app.controller';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],

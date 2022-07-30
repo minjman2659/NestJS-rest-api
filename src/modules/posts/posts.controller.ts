@@ -12,7 +12,7 @@ import {
   Req,
   UseGuards,
 } from '@nestjs/common';
-import { PostsService } from './posts.service';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FastifyRequestWithUser } from '@common/types/fastify';
 import { ResponseMessage } from '@common/decorators';
 import {
@@ -21,8 +21,8 @@ import {
   UPDATE_POST_SUCCESS,
 } from '@common/constants';
 import { AuthGuard } from '@common/guards';
+import { PostsService } from './posts.service';
 import { CreateAndUpdatePostBodyDto, GetPostsQueryDto } from './dto/request';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import {
   FindAllDto,
   FindOneDto,

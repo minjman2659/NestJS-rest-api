@@ -1,7 +1,9 @@
 import { Controller, Get, Res } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { format } from 'date-fns';
 import { FastifyReply } from 'fastify';
 
+@ApiTags('Ping')
 @Controller()
 export class AppController {
   @Get('ping')

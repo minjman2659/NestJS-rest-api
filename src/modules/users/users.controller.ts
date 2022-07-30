@@ -7,10 +7,10 @@ import {
   HttpCode,
   UseGuards,
 } from '@nestjs/common';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { AdminGuard, AuthGuard } from '@common/guards';
 import { UsersService } from './users.service';
 import { GetUsersQueryDto } from './dto/request';
-import { AdminGuard, AuthGuard } from '@common/guards';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FindAllDto, FindOneDto } from './dto/response';
 
 @ApiTags('User')

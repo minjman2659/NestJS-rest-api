@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { configuration, validationSchema } from './config';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UsersModule } from '@modules/users/users.module';
@@ -10,12 +11,13 @@ import { LoggerModule } from '@providers/logger';
 import { mode } from '@common/helpers';
 import { AppController } from './app.controller';
 import { CoreModule } from '@providers/core/core.module';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { HttpExceptionFilter } from '@common/filters';
 import { ResponseInterceptor, TimeoutInterceptor } from '@common/interceptors';
 
 const typeOrmModuleOptions = {
   imports: [ConfigModule],
+  inject: [ConfigService],
   useFactory: async (
     configService: ConfigService,
   ): Promise<TypeOrmModuleOptions> => ({
@@ -30,7 +32,6 @@ const typeOrmModuleOptions = {
     synchronize: mode.isProd ? false : true,
     // logging: mode.isProd ? false : true,
   }),
-  inject: [ConfigService],
 };
 
 @Module({
@@ -40,6 +41,10 @@ const typeOrmModuleOptions = {
       envFilePath: mode.isProd ? '.env.prod' : '.env.dev',
       load: [configuration],
       validationSchema,
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 10,
     }),
     TypeOrmModule.forRootAsync(typeOrmModuleOptions),
     CoreModule,
@@ -62,6 +67,10 @@ const typeOrmModuleOptions = {
     {
       provide: APP_INTERCEPTOR,
       useClass: TimeoutInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

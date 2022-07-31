@@ -15,6 +15,7 @@ export class PostEntity {
   id: number;
 
   @IsNumber()
+  @IsNotEmpty()
   @Column({ type: 'integer', nullable: false })
   userId: number;
 

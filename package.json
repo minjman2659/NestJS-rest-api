@@ -1,8 +1,8 @@
 {
   "name": "nestjs-rest-api",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "NestJS 기반 REST API",
+  "author": "minjman2659",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

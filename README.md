@@ -2,14 +2,17 @@
 
 NestJS를 활용한 REST API <br />
 
-### [What is NestJS?](https://docs.nestjs.com/first-steps)
+### [What is NestJS?](https://docs.nestjs.com/)
 
 ```plain
  1. NodeJS에 기반을 둔 웹 API 프레임워크로서 Express 및 Fastify와 같은 NodeJS 프레임워크를 래핑하여 동작한다.
- 2. 그 동안의 NodeJS 웹 프레임워크가 가지지 못한 구조적인 아키텍쳐를 제공함으로서 개발자로 하여금 구조화된 코딩이 가능하도록 해준다.
+ 2. 그 동안의 NodeJS 웹 프레임워크가 가지지 못한 구조적인 아키텍쳐를 제공함으로서 개발자로 하여금 구조화된 코딩이 가능하도록 도와준다.
  3. TypeScript 및 OOP(객체지향프로그래밍), 모듈화 등을 지원해준다.
- 4. 백엔드 서버가 갖추어야 하는 많은 필수 기능을 프레임워크 내에 내장하고 있고, 추가로 필요한 기능을 설치하고 적용하는 방법을 문서로 제공하여 개발자 친화적인 프레임워크이다.
+ 4. 백엔드 서버가 갖추어야 하는 많은 필수 기능을 프레임워크 내에 내장하고 있고, 추가로 필요한 기능을 설치하고 적용하는 방법을 문서로 제공해주는 개발자 친화적인 프레임워크이다.
 ```
+
+### NestJS Life Cycle
+![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c024a314-3837-4e99-b439-c554cb8128d4/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220731%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220731T140221Z&X-Amz-Expires=86400&X-Amz-Signature=a94cc4bd80e904bc50065f8b85ac087437e515a67126d9ba7c1d3693494991ac&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
 
 <br />
 

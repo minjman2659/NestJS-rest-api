@@ -91,5 +91,5 @@ http://localhost:8080/api/docs 주소 입력
 ### 인가
 
 - 이후 Request의 headers_Baerer Authorization 안에는 accessToken이, cookies 안에는 refreshToken이 담겨서 서버로 전달된다.
-- Request가 올때마다 Fastify의 'preHandler' 훅으로 토큰에 저장된 유저정보를 색출하여 request.user 객체를 생성하고, 이를 바탕으로 guard를 통해 검증을 진행한다.
-- 만약 accessToken이 만료되었지만 refreshToken이 존재할 경우, accessToken을 재발급하여 body로 전달한다. 
+- Request가 올때마다 Fastify의 'preHandler' 훅으로 토큰에 저장된 유저정보를 색출하여 request.user 객체를 생성하고, 이를 바탕으로 Guard에서 검증을 진행한다.
+- 만약 accessToken이 만료되었지만 refreshToken이 존재할 경우, Interceptor에서 accessToken을 재발급하여 body로 전달한다. 

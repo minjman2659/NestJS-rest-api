@@ -131,6 +131,7 @@ export class AuthController {
         httpOnly: true,
         secure: mode.isProd,
         sameSite: 'none',
+        path: '/',
         maxAge: 60 * 60 * 24 * 30, // 30 days
       });
     } else {

@@ -47,7 +47,7 @@ POSTGRES_PW=somethings // 데이터베이스 관리자 비밀번호
 
 ## 📌 실행 방법(package.json 참고)
 
-Node 16 혹은 그 이상의 버전을 필요로 합니다.
+Node 16 혹은 그 이상의 버전을 필요로 한다.
 
 ```javascript
  $ yarn // install dependencies

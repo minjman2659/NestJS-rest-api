@@ -43,9 +43,8 @@ export class TokenService {
       ? request.headers.authorization.split('Bearer ')[1]
       : null;
     const refreshToken = request.cookies['refreshToken'] || null;
-    console.log('cookie : ', request.cookies);
-    console.log('at : ', accessToken);
-    console.log('rt : ', refreshToken);
+    console.log('accessToken : ', accessToken);
+    console.log('refreshToken : ', refreshToken);
     try {
       //* accessToken이 없을 경우, refreshToken 검증을 위해 아래 catch문으로 이동
       if (!accessToken) {

@@ -19,10 +19,6 @@ async function bootstrap() {
 
   const configService = app.get(ConfigService);
 
-  await app.register(fastifyCookie, {
-    secret: configService.get('SECRET_KEY'),
-  });
-
   app.enableCors({
     origin:
       configService.get('NODE_ENV') === 'development'
@@ -32,6 +28,10 @@ async function bootstrap() {
   });
   app.useGlobalPipes(new ValidationPipe());
   app.setGlobalPrefix('/api');
+
+  await app.register(fastifyCookie, {
+    secret: configService.get('SECRET_KEY'),
+  });
 
   const swaggerConfig = new DocumentBuilder()
     .setTitle('NestJS_REST_API')

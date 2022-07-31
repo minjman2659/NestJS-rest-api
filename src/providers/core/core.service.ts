@@ -19,7 +19,7 @@ export class CoreService implements OnModuleInit {
     try {
       fastify.addHook('preHandler', async (request: FastifyRequestWithUser) => {
         console.log(1);
-        console.log(request.cookies);
+        console.log('cookies : ', request.cookies);
         await this.tokenService.authorizeToken(request);
       });
     } catch (err) {

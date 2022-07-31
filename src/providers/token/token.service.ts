@@ -43,8 +43,6 @@ export class TokenService {
       ? request.headers.authorization.split('Bearer ')[1]
       : null;
     const refreshToken = request.cookies['refreshToken'] || null;
-    console.log('accessToken : ', accessToken);
-    console.log('refreshToken : ', refreshToken);
     try {
       //* accessToken이 없을 경우, refreshToken 검증을 위해 아래 catch문으로 이동
       if (!accessToken) {
@@ -53,7 +51,6 @@ export class TokenService {
       const accessData: TokenPayload = await this.verifyJwt(accessToken);
       //* accessData가 없을 경우, refreshToken 검증을 위해 아래 catch문으로 이동
       if (!accessData) {
-        console.log('ad : ', accessData);
         throw new Error('Access Token Error: None or Token_Expired');
       }
       //* accessData가 존재할 경우, request.user값은 accessData

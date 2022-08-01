@@ -80,7 +80,7 @@ Node 16 혹은 그 이상의 버전을 필요로 한다.
 yarn 으로 필요한 패키지 설치 진행 후 Nest 서버 실행한 뒤에 <br />
 http://localhost:8080/api/docs 주소 입력
 
-![image](https://user-images.githubusercontent.com/81504356/182029268-0d0bc5e4-705d-4ae2-ad4a-db8bda937e4d.png)
+<img width="1001" alt="image" src="https://user-images.githubusercontent.com/81504356/182112701-8907b667-1898-46cc-82fc-67f84f7d880f.png">
 
 <br />
 

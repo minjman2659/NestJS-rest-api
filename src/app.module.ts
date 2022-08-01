@@ -4,6 +4,7 @@ import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { configuration, validationSchema } from './config';
+import { HealthCheckModule } from '@modules/health-check/health-check.module';
 import { AuthModule } from '@modules/auth/auth.module';
 import { UsersModule } from '@modules/users/users.module';
 import { PostsModule } from '@modules/posts/posts.module';
@@ -53,6 +54,7 @@ const typeOrmModuleOptions = {
     PostsModule,
     AuthModule,
     TokenModule,
+    HealthCheckModule,
   ],
   controllers: [AppController],
   providers: [

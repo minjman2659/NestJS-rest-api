@@ -24,8 +24,8 @@ import { AuthGuard } from '@common/guards';
 import { PostsService } from './posts.service';
 import { CreateAndUpdatePostBodyDto, GetPostsQueryDto } from './dto/request';
 import {
-  FindAllDto,
-  FindOneDto,
+  FindAllPostsDto,
+  FindOnePostDto,
   CreateDto,
   UpdateDto,
   DeleteDto,
@@ -45,7 +45,7 @@ export class PostsController {
   @ApiResponse({
     status: 200,
     description: 'OK',
-    type: FindAllDto,
+    type: FindAllPostsDto,
   })
   @Get()
   @HttpCode(200)
@@ -61,7 +61,7 @@ export class PostsController {
   @ApiResponse({
     status: 200,
     description: 'OK',
-    type: FindOneDto,
+    type: FindOnePostDto,
   })
   @ApiResponse({
     status: 404,

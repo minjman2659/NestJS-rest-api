@@ -1,7 +1,7 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { FindAllDto } from './find-all.dto';
+import { FindAllPostsDto } from './find-all-posts.dto';
 
-export class FindOneDto extends PickType(FindAllDto, [
+export class FindOnePostDto extends PickType(FindAllPostsDto, [
   'statusCode',
   'message',
 ]) {

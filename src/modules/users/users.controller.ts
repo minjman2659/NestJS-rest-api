@@ -11,7 +11,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AdminGuard, AuthGuard } from '@common/guards';
 import { UsersService } from './users.service';
 import { GetUsersQueryDto } from './dto/request';
-import { FindAllDto, FindOneDto } from './dto/response';
+import { FindAllUsersDto, FindOneUserDto } from './dto/response';
 
 @ApiTags('User')
 @Controller({
@@ -28,7 +28,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'OK',
-    type: FindAllDto,
+    type: FindAllUsersDto,
   })
   @ApiResponse({
     status: 401,
@@ -48,7 +48,7 @@ export class UsersController {
   @ApiResponse({
     status: 200,
     description: 'OK',
-    type: FindOneDto,
+    type: FindOneUserDto,
   })
   @ApiResponse({
     status: 401,

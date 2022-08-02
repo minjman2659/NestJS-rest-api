@@ -1,7 +1,7 @@
 import { ApiProperty, PickType } from '@nestjs/swagger';
-import { FindAllDto } from './find-all.dto';
+import { FindAllUsersDto } from './find-all-users.dto';
 
-export class FindOneDto extends PickType(FindAllDto, [
+export class FindOneUserDto extends PickType(FindAllUsersDto, [
   'statusCode',
   'message',
 ]) {

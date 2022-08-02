@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class FindAllDto {
+export class FindAllUsersDto {
   @ApiProperty({
     example: 200,
     description: 'Http 상태 코드',

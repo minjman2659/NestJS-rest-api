@@ -1,2 +1,2 @@
-export * from './find-all.dto';
-export * from './find-one.dto';
+export * from './find-all-users.dto';
+export * from './find-one-user.dto';

@@ -87,7 +87,7 @@ describe('UsersService', () => {
 
   describe('findOne()', () => {
     describe('[Success]', () => {
-      it('should return user', async () => {
+      it('should return a user', async () => {
         const userData = await usersService.findOne(1);
         expect(userData).toEqual({ user });
       });

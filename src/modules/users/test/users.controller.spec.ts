@@ -99,7 +99,7 @@ describe('UsersController', () => {
   });
 
   describe('findOne()', () => {
-    it('should find one user', () => {
+    it('should find a user', () => {
       expect(usersController.findOne(1)).resolves.toEqual(findOneUserDto.data);
       expect(usersService.findOne).toHaveBeenCalled();
     });

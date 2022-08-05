@@ -94,7 +94,6 @@ describe('UsersService', () => {
     });
     describe('[Failure]', () => {
       it('should return 404 status code when user is not exist', async () => {
-        const temp = userRepository.findOne;
         userRepository.findOne = jest.fn().mockResolvedValue(null);
         const notFoundError = async () => {
           await usersService.findOne(1);
@@ -102,7 +101,6 @@ describe('UsersService', () => {
         await expect(notFoundError).rejects.toThrowError(
           new NotFoundException(NOT_FOUND_USER),
         );
-        userRepository.findOne = temp;
       });
     });
   });

@@ -105,7 +105,6 @@ describe('PostsService', () => {
     });
     describe('[Failure]', () => {
       it('should return 404 status code when post is not exist', async () => {
-        const temp = postRepository.findOne;
         postRepository.findOne = jest.fn().mockResolvedValue(null);
         const notFoundError = async () => {
           await postsService.findOne(1);
@@ -113,12 +112,10 @@ describe('PostsService', () => {
         await expect(notFoundError).rejects.toThrowError(
           new NotFoundException(NOT_FOUND_POST),
         );
-        postRepository.findOne = temp;
       });
     });
   });
 
-  // transaction test 방법 살펴보기
   describe('create()', () => {
     it('should create a post', async () => {
       await postsService.create(createAndUpdateBody, 1);
@@ -136,7 +133,6 @@ describe('PostsService', () => {
     describe('[Failure]', () => {
       it('should return 403 status code when post.userId is different from userId', async () => {
         const tempPost = { userId: 2 };
-        const temp = postRepository.findOne;
         postRepository.findOne = jest.fn().mockResolvedValue(tempPost);
         const forbiddenError = async () => {
           await postsService.update(1, createAndUpdateBody, 1);
@@ -144,10 +140,8 @@ describe('PostsService', () => {
         await expect(forbiddenError).rejects.toThrowError(
           new ForbiddenException(NOT_AUTHOR_OF_POST),
         );
-        postRepository.findOne = temp;
       });
       it('should return 404 status code when post is not exist', async () => {
-        const temp = postRepository.findOne;
         postRepository.findOne = jest.fn().mockResolvedValue(null);
         const notFoundError = async () => {
           await postsService.update(1, createAndUpdateBody, 1);
@@ -155,7 +149,6 @@ describe('PostsService', () => {
         await expect(notFoundError).rejects.toThrowError(
           new NotFoundException(NOT_FOUND_POST),
         );
-        postRepository.findOne = temp;
       });
     });
   });
@@ -170,7 +163,6 @@ describe('PostsService', () => {
     describe('[Failure]', () => {
       it('should return 403 status code when post.userId is different from userId', async () => {
         const tempPost = { userId: 2 };
-        const temp = postRepository.findOne;
         postRepository.findOne = jest.fn().mockResolvedValue(tempPost);
         const forbiddenError = async () => {
           await postsService.delete(1, 1);
@@ -178,10 +170,8 @@ describe('PostsService', () => {
         await expect(forbiddenError).rejects.toThrowError(
           new ForbiddenException(NOT_AUTHOR_OF_POST),
         );
-        postRepository.findOne = temp;
       });
       it('should return 404 status code when post is not exist', async () => {
-        const temp = postRepository.findOne;
         postRepository.findOne = jest.fn().mockResolvedValue(null);
         const notFoundError = async () => {
           await postsService.delete(1, 1);
@@ -189,7 +179,6 @@ describe('PostsService', () => {
         await expect(notFoundError).rejects.toThrowError(
           new NotFoundException(NOT_FOUND_POST),
         );
-        postRepository.findOne = temp;
       });
     });
   });

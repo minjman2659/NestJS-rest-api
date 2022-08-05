@@ -57,7 +57,6 @@ const tokenData = {
 describe('AuthService', () => {
   let authService: AuthService;
   let authRepository: Repository<UserEntity>;
-  let tokenService: TokenService;
   let dataSource: DataSource;
 
   beforeEach(async () => {
@@ -95,7 +94,6 @@ describe('AuthService', () => {
     authRepository = module.get<Repository<UserEntity>>(
       getRepositoryToken(UserEntity),
     );
-    tokenService = module.get<TokenService>(TokenService);
     dataSource = module.get<DataSource>(DataSource);
   });
 

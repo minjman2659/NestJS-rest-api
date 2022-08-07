@@ -17,6 +17,6 @@ FROM node:16-alpine
 ## Step 1의 빌드용 단계에서 빌드된 프로젝트 가져오기
 COPY --from=builder /usr/src/app ./
 
-## nest-api 실행
+## nestjs-rest-api 실행
 CMD ["yarn", "start:prod"]
 EXPOSE 8080

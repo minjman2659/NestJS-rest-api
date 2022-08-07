@@ -1,19 +1,6 @@
 version: '3'
 
 services:
-  backend:
-    container_name: nestjs_rest_api
-    build:
-      context: .
-      dockerfile: Dockerfile
-    image: minjman/nestjs-rest-api
-    restart: always
-    ports:
-      - '8080:8080'
-    networks:
-      - febnine-net
-    depends_on:
-      - postgres
   postgres:
     container_name: nestjs_db
     image: postgres:12
@@ -24,13 +11,15 @@ services:
       POSTGRES_DB: nestjs_db
       POSTGRES_USER: minjman
       POSTGRES_PASSWORD: minjman
+
+  backend:
+    container_name: nestjs_rest_api
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    image: minjman/nestjs-rest-api
+    restart: always
     ports:
-      - '5433:5432'
-    networks:
-      - febnine-net
-    volumes:
-      - postgres:/var/lib/postgres
-volumes:
-  postgres:
-networks:
-  febnine-net:
+      - '8080:8080'
+    depends_on:
+      - postgres

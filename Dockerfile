@@ -12,7 +12,7 @@ RUN yarn build
 
 
 # Step 2. 실행용 node
-FROM node:16
+FROM node:16-alpine
 
 ## Step 1의 빌드용 단계에서 빌드된 프로젝트 가져오기
 COPY --from=builder /usr/src/app ./

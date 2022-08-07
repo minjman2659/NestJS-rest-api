@@ -136,8 +136,11 @@ export class AuthController {
       });
     } else {
       reply.setCookie('refreshToken', null, {
-        maxAge: 0,
         httpOnly: true,
+        secure: mode.isProd,
+        sameSite: 'none',
+        path: '/',
+        maxAge: 0,
       });
     }
   }

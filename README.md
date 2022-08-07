@@ -48,13 +48,13 @@ POSTGRES_PW=somethings // 데이터베이스 관리자 비밀번호
 
 <br />
 
-## 📌 실행 방법(package.json 참고)
+## 📌 실행 방법 (package.json 참고)
 
 Node 16 혹은 그 이상의 버전을 필요로 한다.
 
 ```javascript
  $ yarn // install dependencies
- $ yarn start // production 환경에서 서버 실행
+ $ yarn start:prod // production 환경에서 서버 실행
  $ yarn start:dev // development 환경에서 서버 실행
 ```
 
@@ -71,6 +71,26 @@ Node 16 혹은 그 이상의 버전을 필요로 한다.
 ```javascript
  $ yarn test 또는 $ yarn test:watch // run jest
  $ yarn test:cov // 테스트 커버리지
+```
+
+<br />
+
+## 🐋 Docker
+
+### Docker Compose
+
+Postgres DB와 Nestjs-rest-api를 컨테이너로 실행 _ 이미지 빌드도 함께 진행 (docker-compose.yml 참고)
+
+```javascript
+ $ docker compose up
+```
+
+### Docker Build (Make Image)
+
+nestjs-rest-api 이미지 빌드 (Dockerfile 참고)
+
+```javascript
+ $ docker build -t minjman/nestjs-rest-api .
 ```
 
 <br />

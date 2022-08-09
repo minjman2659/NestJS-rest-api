@@ -18,7 +18,7 @@ NestJS를 활용한 REST API <br />
 
 ## 💻 기술 스택
 
-NestJS, Fastify, Typescript, TypeORM, PostgreSQL, JWT, Jest, Swagger
+NestJS, Fastify, Typescript, TypeORM, PostgreSQL, JWT, Jest, Swagger, Docker
 
 <br />
 

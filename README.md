@@ -12,7 +12,7 @@ NestJS를 활용한 REST API <br />
 ```
 
 ### NestJS Life Cycle
-![image](https://s3.us-west-2.amazonaws.com/secure.notion-static.com/c024a314-3837-4e99-b439-c554cb8128d4/Untitled.png?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=AKIAT73L2G45EIPT3X45%2F20220731%2Fus-west-2%2Fs3%2Faws4_request&X-Amz-Date=20220731T140221Z&X-Amz-Expires=86400&X-Amz-Signature=a94cc4bd80e904bc50065f8b85ac087437e515a67126d9ba7c1d3693494991ac&X-Amz-SignedHeaders=host&response-content-disposition=filename%20%3D%22Untitled.png%22&x-id=GetObject)
+![image](https://user-images.githubusercontent.com/81504356/185879642-85eaa9a3-2d07-4e7d-8fe6-bb879a5fe813.png)
 
 <br />
 
